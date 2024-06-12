@@ -6377,6 +6377,7 @@ mDNSexport int udsserver_init(dnssd_sock_t skts[], const size_t count)
 {
     dnssd_sockaddr_t laddr;
     int ret;
+    int optval = 1;
 
 #ifndef NO_PID_FILE
     FILE *fp = fopen(PID_FILE, "w");
@@ -6408,6 +6409,11 @@ mDNSexport int udsserver_init(dnssd_sock_t skts[], const size_t count)
             goto error;
         }
 
+        if (setsockopt(listenfd, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval)) < 0) {
+            my_perror("ERROR: setsockopt(listenfd, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval)); failed");
+            goto error;
+        }
+
         mDNSPlatformMemZero(&laddr, sizeof(laddr));
 
         #if defined(USE_TCP_LOOPBACK)
@@ -6416,6 +6422,7 @@ mDNSexport int udsserver_init(dnssd_sock_t skts[], const size_t count)
 #ifdef WIN32_CENTENNIAL
             // sin_port = 0, use the first available port from the dynamic client port range (49152-65535)
             // (Used to be MDNS_TCP_SERVERPORT_CENTENNIAL)
+            laddr.sin_port = htons(MDNS_TCP_SERVERPORT);
 #else
             laddr.sin_port = htons(MDNS_TCP_SERVERPORT);
 #endif

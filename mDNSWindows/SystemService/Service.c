@@ -905,6 +905,12 @@ void DNSSD_API DNSServiceStop()
 			CloseHandle(gDNSThreadStopEvent);
 			gDNSThreadStopEvent = NULL;
 		}
+
+		if (gDNSThread)
+		{
+			CloseHandle(gDNSThread);
+			gDNSThread = NULL;
+		}
 	}
 }
 

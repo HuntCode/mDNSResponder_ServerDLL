@@ -1169,7 +1169,7 @@ typedef uint32_t DebugPropertyTag;
 
 #if ( DEBUG )
     #define debug_print_assert( ERROR_CODE, ASSERT_STRING, MESSAGE, FILENAME, LINE_NUMBER, FUNCTION )   \
-    DebugPrintAssert( ERROR_CODE, ASSERT_STRING, MESSAGE, FILENAME, LINE_NUMBER, FUNCTION )
+    //DebugPrintAssert( ERROR_CODE, ASSERT_STRING, MESSAGE, FILENAME, LINE_NUMBER, FUNCTION )
 #else
     #define debug_print_assert( ERROR_CODE, ASSERT_STRING, MESSAGE, FILENAME, LINE_NUMBER, FUNCTION )
 #endif
