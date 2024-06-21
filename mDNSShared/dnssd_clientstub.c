@@ -33,7 +33,7 @@
 #include <stdbool.h>
 
 #include "dnssd_ipc.h"
-
+#include "mdns_strict.h"
 
 #ifndef DEBUG_64BIT_SCM_RIGHTS
 #define DEBUG_64BIT_SCM_RIGHTS 0
