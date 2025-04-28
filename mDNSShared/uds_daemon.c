@@ -187,7 +187,7 @@ mDNSlocal mDNSu32 dnssd_htonl(mDNSu32 l)
 // hack to search-replace perror's to LogMsg's
 mDNSlocal void my_perror(char *errmsg)
 {
-    LogMsg("%s: %d (%s)", errmsg, dnssd_errno, dnssd_strerror(dnssd_errno));
+    LogMsg("%s: %d (%s)\n", errmsg, dnssd_errno, dnssd_strerror(dnssd_errno));
 }
 
 // Throttled version of my_perror: Logs once every 250 msgs

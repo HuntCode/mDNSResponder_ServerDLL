@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (c) 2003-2023 Apple Inc. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,26 +30,68 @@
 #if defined(_WIN32)
 
 #include <stdint.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 
-char *win32_strerror(int inErrorCode)
+//char *win32_strerror(int inErrorCode)
+//{
+//    static char buffer[1024];
+//    DWORD n;
+//    memset(buffer, 0, sizeof(buffer));
+//    n = FormatMessageA(
+//        FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+//        NULL,
+//        (DWORD) inErrorCode,
+//        MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+//        buffer,
+//        sizeof(buffer),
+//        NULL);
+//    if (n > 0)
+//    {
+//        // Remove any trailing CR's or LF's since some messages have them.
+//        while ((n > 0) && isspace(((unsigned char *) buffer)[n - 1]))
+//            buffer[--n] = '\0';
+//    }
+//    return buffer;
+//}
+
+char* win32_strerror(int inErrorCode)
 {
     static char buffer[1024];
+    static WCHAR wbuffer[1024];
     DWORD n;
+
     memset(buffer, 0, sizeof(buffer));
-    n = FormatMessageA(
+    memset(wbuffer, 0, sizeof(wbuffer));
+
+    n = FormatMessageW(
         FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
         NULL,
-        (DWORD) inErrorCode,
+        (DWORD)inErrorCode,
         MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-        buffer,
-        sizeof(buffer),
+        wbuffer,
+        sizeof(wbuffer) / sizeof(WCHAR),
         NULL);
+
     if (n > 0)
     {
-        // Remove any trailing CR's or LF's since some messages have them.
-        while ((n > 0) && isspace(((unsigned char *) buffer)[n - 1]))
-            buffer[--n] = '\0';
+        // 移除结尾的换行符和空格
+        while ((n > 0) && iswspace(wbuffer[n - 1]))
+            wbuffer[--n] = L'\0';
+
+        // 将宽字符转换为 UTF-8（或其他编码）
+        int len = WideCharToMultiByte(CP_UTF8, 0, wbuffer, -1, buffer, sizeof(buffer), NULL, NULL);
+        if (len == 0)
+        {
+            snprintf(buffer, sizeof(buffer), "Unknown error code: %d", inErrorCode);
+        }
     }
+    else
+    {
+        snprintf(buffer, sizeof(buffer), "Unknown error code: %d", inErrorCode);
+    }
+
     return buffer;
 }
 

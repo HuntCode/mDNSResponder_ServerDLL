@@ -1,4 +1,4 @@
-/* -*- Mode: C; tab-width: 4 -*-
+﻿/* -*- Mode: C; tab-width: 4 -*-
  *
  * Copyright (c) 2002-2023 Apple Inc. All rights reserved.
  *
@@ -820,7 +820,7 @@ mDNSexport mDNSs32	mDNSPlatformContinuousTimeSeconds( void )
 	// behave correctly. We use GetTickCount64() rather than GetTickCount() because
 	// GetTickCount() would wrap after 47 days, and two's complement comparisons
 	// wouldn't work because we're dividing by 1000.
-	return ( mDNSs32 ) (GetTickCount64( NULL ) / 1000ULL);
+	return ( mDNSs32 ) (GetTickCount64() / 1000ULL);
 }
 
 //===========================================================================================================================
@@ -1574,7 +1574,7 @@ mDNSexport mDNSBool mDNSPlatformValidRecordForInterface(const AuthRecord *rr, mD
 	return mDNStrue;
 }
  
-mDNSexport mDNSBool mDNSPlatformValidQuestionForInterface(DNSQuestion *q, const NetworkInterfaceInfo *intf)
+mDNSexport mDNSBool mDNSPlatformValidQuestionForInterface(const DNSQuestion *q, const NetworkInterfaceInfo *intf)
 {
 	DEBUG_UNUSED( q );
 	DEBUG_UNUSED( intf );
